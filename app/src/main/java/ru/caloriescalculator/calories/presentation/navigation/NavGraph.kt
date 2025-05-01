@@ -4,9 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import ru.caloriescalculator.calories.presentation.composable.AddCaloriesScreen
 import ru.caloriescalculator.calories.presentation.composable.HistoryScreen
 import ru.caloriescalculator.calories.presentation.composable.HomeScreen
 import ru.caloriescalculator.calories.presentation.composable.ProfileScreen
+import ru.caloriescalculator.calories.presentation.composable.ViewDayCaloriesScreen
 
 @Composable
 fun NavGraph(
@@ -17,13 +19,19 @@ fun NavGraph(
         startDestination = Screen.Home.route,
     ) {
         composable(Screen.Home.route) {
-            HomeScreen()
+            HomeScreen(navController = navHostController)
         }
         composable(Screen.Profile.route) {
             ProfileScreen()
         }
         composable(Screen.History.route) {
             HistoryScreen()
+        }
+        composable(Screen.AddCalories.route) {
+            AddCaloriesScreen()
+        }
+        composable(Screen.ViewDayCalories.route) {
+            ViewDayCaloriesScreen()
         }
     }
 }
