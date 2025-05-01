@@ -1,5 +1,7 @@
 package ru.caloriescalculator.calories.presentation.composable
 
+import android.annotation.SuppressLint
+import android.text.format.DateFormat
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,9 +12,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -23,39 +30,52 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.aay.compose.baseComponents.model.GridOrientation
 import com.aay.compose.baseComponents.model.LegendPosition
 import com.aay.compose.lineChart.LineChart
 import com.aay.compose.lineChart.model.LineParameters
 import com.aay.compose.lineChart.model.LineType
-import ru.caloriescalculator.calories.presentation.model.CaloriesItem
+import ru.caloriescalculator.calories.presentation.model.DayCaloriesItem
 import ru.caloriescalculator.calories.presentation.navigation.Screen
 import ru.caloriescalculator.calories.presentation.viewmodel.HomeViewModel
 
 @Composable
-fun HomeScreen(navController: NavController, homeScreenViewModel: HomeViewModel = viewModel()) {
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+fun HomeScreen(navController: NavController, homeScreenViewModel: HomeViewModel = hiltViewModel()) {
     val uiState by homeScreenViewModel.uiState.collectAsState()
-    Column(
-        modifier = Modifier,
-    ) {
-        LineChartView(uiState.calories)
-        CaloriesListView(navController, uiState.calories)
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate(Screen.AddCalories.route)
+                },
+            ) {
+                Icon(Icons.Filled.Add, "Добавить калории")
+            }
+        },
+    ) {  _ ->
+        Column(
+            modifier = Modifier,
+        ) {
+            LineChartView(uiState.calories)
+            CaloriesListView(navController, uiState.calories)
+        }
     }
 }
 
 @Composable
-private fun LineChartView(caloriesItems: List<CaloriesItem>) {
+private fun LineChartView(caloriesItems: List<DayCaloriesItem>) {
     val calories = caloriesItems.map {
-        it.calories
+        it.dayCalories.toDouble()
     }
     val dates = caloriesItems.map {
-        it.date
+        DateFormat.format("dd", it.date).toString()
     }
     val lineParameters: List<LineParameters> = listOf(
         LineParameters(
-            label = "Калории",
+            label = "Calories",
             data = calories,
             lineColor = Color.Blue,
             lineType = LineType.DEFAULT_LINE,
@@ -87,11 +107,12 @@ private fun LineChartView(caloriesItems: List<CaloriesItem>) {
 }
 
 @Composable
-private fun CaloriesListView(navController: NavController, calories: List<CaloriesItem>) {
+private fun CaloriesListView(navController: NavController, calories: List<DayCaloriesItem>) {
     LazyColumn(
         contentPadding = PaddingValues(bottom = 100.dp)
     ) {
-        items(items = calories) { item: CaloriesItem ->
+        items(items = calories) { item ->
+            val date = DateFormat.format("dd MMM", item.date).toString()
             OutlinedCard(
                 onClick = {
                     navController.navigate(Screen.ViewDayCalories.route)
@@ -104,13 +125,13 @@ private fun CaloriesListView(navController: NavController, calories: List<Calori
             ) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        text = item.date,
+                        text = date,
                         fontSize = 16.sp,
                         modifier = Modifier.padding(16.dp),
                     )
                     Spacer(Modifier.weight(1f))
                     Text(
-                        text = item.calories.toString(),
+                        text = item.dayCalories.toString(),
                         fontSize = 24.sp,
                         modifier = Modifier.padding(16.dp),
                     )

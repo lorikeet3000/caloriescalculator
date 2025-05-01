@@ -28,7 +28,7 @@ fun NavGraph(
             HistoryScreen()
         }
         composable(Screen.AddCalories.route) {
-            AddCaloriesScreen()
+            AddCaloriesScreen(navController = navHostController)
         }
         composable(Screen.ViewDayCalories.route) {
             ViewDayCaloriesScreen()
