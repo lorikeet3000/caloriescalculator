@@ -7,7 +7,10 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Screen(val title: String, val icon: ImageVector, val route: String) {
-    object Home: Screen(title = "Home", icon = Icons.Default.Home, route = "home_screen")
-    object Profile: Screen(title = "Profile", icon = Icons.Default.Person, route = "profile_screen")
-    object History: Screen(title = "History", icon = Icons.Default.DateRange, route = "history_screen")
+    object Home : Screen(title = "Home", icon = Icons.Default.Home, route = "home_screen")
+    object Profile : Screen(title = "Profile", icon = Icons.Default.Person, route = "profile_screen")
+    object History : Screen(title = "History", icon = Icons.Default.DateRange, route = "history_screen")
+    object AddCalories : Screen(title = "Add calories", icon = Icons.Default.Home, route = "add_screen")
+    object ViewDayCalories :
+        Screen(title = "View day calories", icon = Icons.Default.Home, route = "view_day_calories_screen")
 }
