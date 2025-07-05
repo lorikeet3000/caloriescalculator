@@ -4,7 +4,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import ru.caloriescalculator.calories.data.repository.CaloriesRepository
 import ru.caloriescalculator.calories.presentation.model.CaloriesItem
 import java.util.Date
@@ -53,16 +55,18 @@ class AddCaloriesViewModel @Inject constructor(
             // todo show error
             return
         }
-        repository.addCalories(CaloriesItem(
-            date = Date(),
-            calories = caloriesInt,
-            name = foodNameValue
-        ))
+        viewModelScope.launch {
+            repository.addCalories(CaloriesItem(
+                date = Date(),
+                calories = caloriesInt,
+                name = foodNameValue
+            ))
+        }
     }
 
     fun onCaloriesFor100SubmitClicked() {
         val caloriesInt = caloriesFor100.toIntOrNull()
         val weight = weightValue.toDoubleOrNull()
-
+        // todo calculate
     }
 }

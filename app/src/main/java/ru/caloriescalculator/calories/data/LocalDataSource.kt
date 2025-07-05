@@ -37,5 +37,50 @@ object LocalDataSource {
                 )
             ),
         ),
+        DayCaloriesItem(
+            date = Date(),
+            meals = listOf(
+                CaloriesItem(
+                    date = Date(),
+                    calories = 1050,
+                    name = "Булочка"
+                ),
+                CaloriesItem(
+                    date = Date(),
+                    calories = 1070,
+                    name = "Pizza"
+                )
+            ),
+        ),
+        DayCaloriesItem(
+            date = Date(),
+            meals = listOf(
+                CaloriesItem(
+                    date = Date(),
+                    calories = 1050,
+                    name = "Булочка"
+                ),
+                CaloriesItem(
+                    date = Date(),
+                    calories = 1070,
+                    name = "Pizza"
+                )
+            ),
+        ),
+        DayCaloriesItem(
+            date = Date(),
+            meals = listOf(
+                CaloriesItem(
+                    date = Date(),
+                    calories = 1050,
+                    name = "Булочка"
+                ),
+                CaloriesItem(
+                    date = Date(),
+                    calories = 1070,
+                    name = "Pizza"
+                )
+            ),
+        ),
     )
 }
