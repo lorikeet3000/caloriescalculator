@@ -1,6 +1,9 @@
 package ru.caloriescalculator.calories.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -9,6 +12,7 @@ import ru.caloriescalculator.calories.presentation.composable.HistoryScreen
 import ru.caloriescalculator.calories.presentation.composable.HomeScreen
 import ru.caloriescalculator.calories.presentation.composable.ProfileScreen
 import ru.caloriescalculator.calories.presentation.composable.ViewDayCaloriesScreen
+import ru.caloriescalculator.calories.presentation.viewmodel.HomeViewModel
 
 @Composable
 fun NavGraph(
@@ -19,7 +23,14 @@ fun NavGraph(
         startDestination = Screen.Home.route,
     ) {
         composable(Screen.Home.route) {
-            HomeScreen(navController = navHostController)
+            val viewModel = hiltViewModel<HomeViewModel>()
+            val uiState by viewModel.uiState.collectAsState()
+            HomeScreen(
+                onAddCaloriesClick = {
+                    navHostController.navigate(Screen.AddCalories.route)
+                },
+                uiState = uiState
+            )
         }
         composable(Screen.Profile.route) {
             ProfileScreen()

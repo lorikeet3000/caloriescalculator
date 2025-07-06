@@ -6,6 +6,27 @@ import java.util.Date
 
 object LocalDataSource {
 
+    val todayCaloriesTest = DayCaloriesItem(
+        meals = listOf(
+            CaloriesItem(
+                date = Date(),
+                calories = 300,
+                name = "Булочка"
+            ),
+            CaloriesItem(
+                date = Date(),
+                calories = 1000,
+                name = "Pizza"
+            ),
+            CaloriesItem(
+                date = Date(),
+                calories = 600,
+                name = "Hot dog"
+            ),
+        ),
+        date = Date()
+    )
+
     val testCalories = listOf(
         DayCaloriesItem(
             date = Date(),

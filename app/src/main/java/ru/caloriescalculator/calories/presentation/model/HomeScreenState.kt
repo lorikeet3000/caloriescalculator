@@ -1,13 +1,18 @@
 package ru.caloriescalculator.calories.presentation.model
 
+import java.util.Date
+import kotlin.math.max
+
 data class HomeScreenState(
-    val calories: List<DayCaloriesItem> = emptyList<DayCaloriesItem>()
+    val calories: DayCaloriesItem = DayCaloriesItem(
+        meals = emptyList(),
+        date = Date()
+    ),
+    val todayTotalCalories: Int = 0,
 ) {
 
-    fun getAverageCalories(forDays: Int): Int {
-        return calories.takeLast(forDays)
-            .sumOf {
-                it.dayCalories
-            } / forDays
-    }
+    val remainingCalories: Int
+        get() {
+            return max(0, todayTotalCalories - calories.dayCalories)
+        }
 }

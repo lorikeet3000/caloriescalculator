@@ -14,7 +14,8 @@ class HomeViewModel : ViewModel() {
 
     init {
         _uiState.value = HomeScreenState(
-            calories = LocalDataSource.testCalories
+            calories = LocalDataSource.todayCaloriesTest,
+            todayTotalCalories = 1400
         )
     }
 }
