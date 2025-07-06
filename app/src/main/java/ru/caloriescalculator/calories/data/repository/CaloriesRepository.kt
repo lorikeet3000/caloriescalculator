@@ -9,12 +9,7 @@ class CaloriesRepository @Inject constructor(
     private val caloriesDao: CaloriesDao
 ) {
 
-    suspend fun addCalories(caloriesItem: CaloriesItem) {
-        val caloriesEntity = CaloriesEntity(
-            date = caloriesItem.date.time,
-            foodName = caloriesItem.name,
-            calories = caloriesItem.calories
-        )
+    suspend fun addCalories(caloriesEntity: CaloriesEntity) {
         caloriesDao.insertAll(caloriesEntity)
     }
 }

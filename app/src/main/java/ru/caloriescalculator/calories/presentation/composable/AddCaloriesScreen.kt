@@ -11,67 +11,93 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import ru.caloriescalculator.calories.presentation.viewmodel.AddCaloriesViewModel
+import ru.caloriescalculator.calories.presentation.event.AddCaloriesEvent
 
 @Composable
-fun AddCaloriesScreen(navController: NavController, viewModel: AddCaloriesViewModel = hiltViewModel()) {
+fun AddCaloriesScreen(
+    foodName: String,
+    calories: String,
+    caloriesFor100: String,
+    foodWeight: String,
+    isFoodNameError: Boolean,
+    onEvent: (AddCaloriesEvent) -> Unit
+) {
     Column {
         Spacer(modifier = Modifier.height(32.dp))
-        EnterFoodNameView(viewModel)
-        Text(
-            text = "and",
-            fontSize = 36.sp,
-            color = Color.Gray,
-            modifier = Modifier.fillMaxWidth().padding(64.dp),
-            textAlign = TextAlign.Center
+        EnterFoodNameView(
+            foodName = foodName,
+            isError = isFoodNameError,
+            onFoodNameChanged = {
+                onEvent(AddCaloriesEvent.FoodNameChange(it))
+            }
         )
-        EnterCaloriesView(viewModel)
-        Text(
-            text = "or",
-            fontSize = 36.sp,
-            color = Color.Gray,
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            textAlign = TextAlign.Center
+        Spacer(modifier = Modifier.height(50.dp))
+        EnterCaloriesView(
+            calories = calories,
+            onCaloriesChanged = {
+                onEvent(AddCaloriesEvent.CaloriesValueUpdate(it))
+            },
+            onCaloriesSubmitClick = {
+                onEvent(AddCaloriesEvent.CaloriesSubmit)
+            }
         )
-        EnterCaloriesAndWeight(viewModel)
+        Spacer(modifier = Modifier.height(50.dp))
+        EnterCaloriesAndWeight(
+            caloriesFor100 = caloriesFor100,
+            foodWeight = foodWeight,
+            onCaloriesFor100Changed = {
+                AddCaloriesEvent.CaloriesFor100Update(it)
+            },
+            onFoodWeightChanged = {
+                AddCaloriesEvent.FoodWeightUpdate(it)
+            },
+            onCaloriesFor100SubmitClick = {
+                AddCaloriesEvent.CaloriesFor100Submit
+            }
+        )
     }
 }
 
 @Composable
-private fun EnterFoodNameView(viewModel: AddCaloriesViewModel) {
+private fun EnterFoodNameView(
+    foodName: String,
+    isError: Boolean,
+    onFoodNameChanged: (String) -> Unit
+) {
     OutlinedTextField(
-        value = viewModel.foodNameValue,
+        value = foodName,
         singleLine = true,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 32.dp),
-        onValueChange = {
-            viewModel.onFoodNameValueChanged(it)
-        },
-        label = { Text(text = "Enter food name") },
-        isError = false,
+        onValueChange = onFoodNameChanged,
+        label = { Text(text = "Введите название продукта") },
+        isError = isError,
+        supportingText = {
+            if (isError) {
+                Text("Введите название")
+            }
+        }
     )
 }
 
 @Composable
-private fun EnterCaloriesView(viewModel: AddCaloriesViewModel) {
+private fun EnterCaloriesView(
+    calories: String,
+    onCaloriesChanged: (String) -> Unit,
+    onCaloriesSubmitClick: () -> Unit
+) {
     OutlinedTextField(
-        value = viewModel.caloriesValue,
+        value = calories,
         singleLine = true,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 32.dp),
-        onValueChange = {
-            viewModel.onCalorieValueUpdated(it)
-        },
-        label = { Text(text = "Enter calories") },
+        onValueChange = onCaloriesChanged,
+        label = { Text(text = "Введите калории (ккал)") },
         isError = false,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )
@@ -80,39 +106,39 @@ private fun EnterCaloriesView(viewModel: AddCaloriesViewModel) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 32.dp),
-        onClick = {
-            viewModel.onCaloriesSubmitClicked()
-        }
+        onClick = onCaloriesSubmitClick
     ) {
-        Text(text = "Submit")
+        Text(text = "Добавить")
     }
 }
 
 @Composable
-private fun EnterCaloriesAndWeight(viewModel: AddCaloriesViewModel) {
+private fun EnterCaloriesAndWeight(
+    caloriesFor100: String,
+    foodWeight: String,
+    onCaloriesFor100Changed: (String) -> Unit,
+    onFoodWeightChanged: (String) -> Unit,
+    onCaloriesFor100SubmitClick: () -> Unit
+) {
     OutlinedTextField(
-        value = viewModel.caloriesFor100,
+        value = caloriesFor100,
         singleLine = true,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 32.dp),
-        onValueChange = {
-            viewModel.onCaloriesFor100Updated(it)
-        },
-        label = { Text(text = "Enter calories for 100 g/ml") },
+        onValueChange = onCaloriesFor100Changed,
+        label = { Text(text = "Введите калории на 100 г/мл") },
         isError = false,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )
     OutlinedTextField(
-        value = viewModel.weightValue,
+        value = foodWeight,
         singleLine = true,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 32.dp),
-        onValueChange = {
-            viewModel.onWeightUpdated(it)
-        },
-        label = { Text(text = "Enter weight/volume in g/ml") },
+        onValueChange = onFoodWeightChanged,
+        label = { Text(text = "Введите вес/объем в г/мл") },
         isError = false,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )
@@ -121,10 +147,21 @@ private fun EnterCaloriesAndWeight(viewModel: AddCaloriesViewModel) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 32.dp),
-        onClick = {
-            viewModel.onCaloriesFor100SubmitClicked()
-        }
+        onClick = onCaloriesFor100SubmitClick
     ) {
-        Text(text = "Submit")
+        Text(text = "Добавить")
     }
+}
+
+@Composable
+@Preview
+fun AddCaloriesScreenPreview() {
+    AddCaloriesScreen(
+        foodName = "",
+        calories = "",
+        caloriesFor100 = "",
+        foodWeight = "",
+        isFoodNameError = true,
+        onEvent = {}
+    )
 }

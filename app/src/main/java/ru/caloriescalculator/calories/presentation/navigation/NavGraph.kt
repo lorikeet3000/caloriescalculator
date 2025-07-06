@@ -12,6 +12,7 @@ import ru.caloriescalculator.calories.presentation.composable.HistoryScreen
 import ru.caloriescalculator.calories.presentation.composable.HomeScreen
 import ru.caloriescalculator.calories.presentation.composable.ProfileScreen
 import ru.caloriescalculator.calories.presentation.composable.ViewDayCaloriesScreen
+import ru.caloriescalculator.calories.presentation.viewmodel.AddCaloriesViewModel
 import ru.caloriescalculator.calories.presentation.viewmodel.HomeViewModel
 
 @Composable
@@ -39,7 +40,15 @@ fun NavGraph(
             HistoryScreen()
         }
         composable(Screen.AddCalories.route) {
-            AddCaloriesScreen(navController = navHostController)
+            val viewModel = hiltViewModel<AddCaloriesViewModel>()
+            AddCaloriesScreen(
+                foodName = viewModel.foodNameValue,
+                calories = viewModel.caloriesValue,
+                caloriesFor100 = viewModel.caloriesFor100Value,
+                foodWeight = viewModel.foodWeightValue,
+                isFoodNameError = viewModel.foodNameHasErrors,
+                onEvent = viewModel::onEvent
+            )
         }
         composable(Screen.ViewDayCalories.route) {
             ViewDayCaloriesScreen()
