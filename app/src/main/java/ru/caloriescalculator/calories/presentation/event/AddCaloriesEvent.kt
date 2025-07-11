@@ -6,12 +6,6 @@ sealed interface AddCaloriesEvent {
         val newValue: String
     ) : AddCaloriesEvent
 
-    data class CaloriesValueUpdate(
-        val newValue: String
-    ) : AddCaloriesEvent
-
-    data object CaloriesSubmit : AddCaloriesEvent
-
     data class CaloriesFor100Update(
         val newValue: String
     ) : AddCaloriesEvent

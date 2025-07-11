@@ -43,10 +43,8 @@ fun NavGraph(
             val viewModel = hiltViewModel<AddCaloriesViewModel>()
             AddCaloriesScreen(
                 foodName = viewModel.foodNameValue,
-                calories = viewModel.caloriesValue,
                 caloriesFor100 = viewModel.caloriesFor100Value,
                 foodWeight = viewModel.foodWeightValue,
-                isFoodNameError = viewModel.foodNameHasErrors,
                 onEvent = viewModel::onEvent
             )
         }

@@ -19,29 +19,16 @@ import ru.caloriescalculator.calories.presentation.event.AddCaloriesEvent
 @Composable
 fun AddCaloriesScreen(
     foodName: String,
-    calories: String,
     caloriesFor100: String,
     foodWeight: String,
-    isFoodNameError: Boolean,
     onEvent: (AddCaloriesEvent) -> Unit
 ) {
     Column {
         Spacer(modifier = Modifier.height(32.dp))
         EnterFoodNameView(
             foodName = foodName,
-            isError = isFoodNameError,
             onFoodNameChanged = {
                 onEvent(AddCaloriesEvent.FoodNameChange(it))
-            }
-        )
-        Spacer(modifier = Modifier.height(50.dp))
-        EnterCaloriesView(
-            calories = calories,
-            onCaloriesChanged = {
-                onEvent(AddCaloriesEvent.CaloriesValueUpdate(it))
-            },
-            onCaloriesSubmitClick = {
-                onEvent(AddCaloriesEvent.CaloriesSubmit)
             }
         )
         Spacer(modifier = Modifier.height(50.dp))
@@ -49,13 +36,13 @@ fun AddCaloriesScreen(
             caloriesFor100 = caloriesFor100,
             foodWeight = foodWeight,
             onCaloriesFor100Changed = {
-                AddCaloriesEvent.CaloriesFor100Update(it)
+                onEvent(AddCaloriesEvent.CaloriesFor100Update(it))
             },
             onFoodWeightChanged = {
-                AddCaloriesEvent.FoodWeightUpdate(it)
+                onEvent(AddCaloriesEvent.FoodWeightUpdate(it))
             },
             onCaloriesFor100SubmitClick = {
-                AddCaloriesEvent.CaloriesFor100Submit
+                onEvent(AddCaloriesEvent.CaloriesFor100Submit)
             }
         )
     }
@@ -64,7 +51,6 @@ fun AddCaloriesScreen(
 @Composable
 private fun EnterFoodNameView(
     foodName: String,
-    isError: Boolean,
     onFoodNameChanged: (String) -> Unit
 ) {
     OutlinedTextField(
@@ -75,41 +61,7 @@ private fun EnterFoodNameView(
             .padding(horizontal = 32.dp),
         onValueChange = onFoodNameChanged,
         label = { Text(text = "Введите название продукта") },
-        isError = isError,
-        supportingText = {
-            if (isError) {
-                Text("Введите название")
-            }
-        }
     )
-}
-
-@Composable
-private fun EnterCaloriesView(
-    calories: String,
-    onCaloriesChanged: (String) -> Unit,
-    onCaloriesSubmitClick: () -> Unit
-) {
-    OutlinedTextField(
-        value = calories,
-        singleLine = true,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 32.dp),
-        onValueChange = onCaloriesChanged,
-        label = { Text(text = "Введите калории (ккал)") },
-        isError = false,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-    )
-    Spacer(modifier = Modifier.height(16.dp))
-    Button(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 32.dp),
-        onClick = onCaloriesSubmitClick
-    ) {
-        Text(text = "Добавить")
-    }
 }
 
 @Composable
@@ -158,10 +110,8 @@ private fun EnterCaloriesAndWeight(
 fun AddCaloriesScreenPreview() {
     AddCaloriesScreen(
         foodName = "",
-        calories = "",
         caloriesFor100 = "",
         foodWeight = "",
-        isFoodNameError = true,
         onEvent = {}
     )
 }

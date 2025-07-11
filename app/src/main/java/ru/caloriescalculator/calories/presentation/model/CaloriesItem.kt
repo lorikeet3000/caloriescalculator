@@ -5,7 +5,8 @@ import java.util.Date
 data class CaloriesItem(
     val date: Date,
     val calories: Int,
-    val name: String
+    val name: String,
+    val weight: Int = 0
 )
 
 data class DayCaloriesItem(

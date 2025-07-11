@@ -1,11 +1,10 @@
 package ru.caloriescalculator.calories.presentation.viewmodel
 
 import android.text.format.DateFormat
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -23,33 +22,20 @@ class AddCaloriesViewModel @Inject constructor(
     var foodNameValue by mutableStateOf("")
         private set
 
-    var caloriesValue by mutableStateOf("")
-        private set
-
     var caloriesFor100Value by mutableStateOf("")
         private set
 
     var foodWeightValue by mutableStateOf("")
         private set
 
-    val foodNameHasErrors by derivedStateOf {
-        foodNameValue.isEmpty()
-    }
-
     fun onEvent(event: AddCaloriesEvent) {
         when (event) {
             AddCaloriesEvent.CaloriesFor100Submit -> onCaloriesFor100SubmitClicked()
             is AddCaloriesEvent.CaloriesFor100Update -> onCaloriesFor100Updated(event.newValue)
-            AddCaloriesEvent.CaloriesSubmit -> onCaloriesSubmitClicked()
-            is AddCaloriesEvent.CaloriesValueUpdate -> onCalorieValueUpdated(event.newValue)
             is AddCaloriesEvent.FoodNameChange -> onFoodNameValueChanged(event.newValue)
             is AddCaloriesEvent.FoodWeightUpdate -> onFoodWeightUpdated(event.newValue)
         }
 
-    }
-
-    fun onCalorieValueUpdated(value: String) {
-        caloriesValue = value
     }
 
     fun onCaloriesFor100Updated(value: String) {
@@ -64,28 +50,28 @@ class AddCaloriesViewModel @Inject constructor(
         foodNameValue = value
     }
 
-    fun onCaloriesSubmitClicked() {
-        if (foodNameValue.isEmpty()) {
+    fun onCaloriesFor100SubmitClicked() {
+        val caloriesFor100 = caloriesFor100Value.toIntOrNull()
+        val weight = foodWeightValue.toIntOrNull()
+        if (foodNameValue.isEmpty() || caloriesFor100 == null || weight == null) {
+            // todo show error
             return
         }
-        val caloriesInt = caloriesValue.toIntOrNull()
-        if (caloriesInt == null) {
-            return
-        }
+        saveCalories(foodNameValue, caloriesFor100, weight)
+    }
+
+    private fun saveCalories(foodName: String, caloriesFor100: Int, weight: Int) {
         viewModelScope.launch {
             val dateString = DateFormat.format("dd.MM.yyyy", Date()).toString()
             val entity = CaloriesEntity(
                 date = dateString,
-                foodName = foodNameValue,
-                calories = caloriesInt
+                foodName = foodName,
+                caloriesFor100 = caloriesFor100,
+                weight = weight
             )
             repository.addCalories(entity)
-        }
-    }
 
-    fun onCaloriesFor100SubmitClicked() {
-        val caloriesInt = caloriesFor100Value.toIntOrNull()
-        val weight = foodWeightValue.toDoubleOrNull()
-        // todo calculate
+            // todo show dialog
+        }
     }
 }
