@@ -30,7 +30,7 @@ class HomeViewModel @Inject constructor(
             val todayDateString = dateConverter.convertToString(Date())
             repository.getForDate(todayDateString).collect { items ->
                 _uiState.value = _uiState.value.copy(
-                    items = mapper.mapCaloriesEntity(items)
+                    items = mapper.mapEntitiesToItems(items)
                 )
             }
         }

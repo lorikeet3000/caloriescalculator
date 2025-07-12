@@ -9,7 +9,7 @@ class CaloriesMapper @Inject constructor(
     private val dateConverter: DateConverter
 ) {
 
-    fun mapCaloriesEntity(entities: List<CaloriesEntity>): List<CaloriesItem> {
+    fun mapEntitiesToItems(entities: List<CaloriesEntity>): List<CaloriesItem> {
         return entities.map { entity ->
             val date = dateConverter.convertToDate(entity.date)
             CaloriesItem(
@@ -19,5 +19,15 @@ class CaloriesMapper @Inject constructor(
                 weight = entity.weight
             )
         }
+    }
+
+    fun mapItemToEntity(item: CaloriesItem): CaloriesEntity {
+        val dateString = dateConverter.convertToString(item.date)
+        return CaloriesEntity(
+            date = dateString,
+            foodName = item.foodName,
+            weight = item.weight,
+            caloriesFor100 = item.caloriesFor100
+        )
     }
 }

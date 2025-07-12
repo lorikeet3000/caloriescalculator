@@ -1,9 +1,9 @@
 package ru.caloriescalculator.calories.presentation.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -25,7 +25,7 @@ fun NavGraph(
     ) {
         composable(Screen.Home.route) {
             val viewModel = hiltViewModel<HomeViewModel>()
-            val uiState by viewModel.uiState.collectAsState()
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
             HomeScreen(
                 onAddCaloriesClick = {
                     navHostController.navigate(Screen.AddCalories.route)
@@ -41,10 +41,19 @@ fun NavGraph(
         }
         composable(Screen.AddCalories.route) {
             val viewModel = hiltViewModel<AddCaloriesViewModel>()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
             AddCaloriesScreen(
                 foodName = viewModel.foodNameValue,
                 caloriesFor100 = viewModel.caloriesFor100Value,
                 foodWeight = viewModel.foodWeightValue,
+                isFoodNameError = uiState.value.isFoodNameError,
+                isCaloriesError = uiState.value.isCaloriesError,
+                isWeightError = uiState.value.isWeightError,
+                confirmDialogState = uiState.value.confirmDialogState,
+                evaluatedCalories = uiState.value.evaluatedCalories,
+                onScreenClose = {
+                    navHostController.popBackStack()
+                },
                 onEvent = viewModel::onEvent
             )
         }
