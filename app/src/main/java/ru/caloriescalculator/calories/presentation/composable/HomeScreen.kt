@@ -68,7 +68,8 @@ private fun HomeScreen(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(top = 50.dp)
             ) {
                 CurrentTodayCaloriesView(
@@ -148,8 +149,7 @@ private fun TodayCaloriesListView(
     ) {
         items(calories) { item ->
             CaloriesItemView(
-                foodCalories = item.caloriesFor100.toString(),
-                foodName = item.foodName
+                item = item
             )
             HorizontalDivider()
         }
@@ -158,20 +158,27 @@ private fun TodayCaloriesListView(
 
 @Composable
 private fun CaloriesItemView(
-    foodName: String,
-    foodCalories: String
+    item: CaloriesItem
 ) {
-    Row(modifier = Modifier.fillMaxWidth()) {
+    Column {
+        Row(modifier = Modifier.fillMaxWidth()
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp)) {
+            Text(
+                text = item.foodName,
+                fontSize = 16.sp,
+            )
+            Spacer(Modifier.weight(1f))
+            Text(
+                text = "${item.totalCalories} ккал",
+                fontSize = 22.sp,
+            )
+        }
         Text(
-            text = foodName,
-            fontSize = 16.sp,
-            modifier = Modifier.padding(16.dp),
-        )
-        Spacer(Modifier.weight(1f))
-        Text(
-            text = foodCalories,
-            fontSize = 22.sp,
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.fillMaxWidth()
+                .padding(end = 4.dp),
+            textAlign = TextAlign.End,
+            fontSize = 12.sp,
+            text = "на 100г/мл: ${item.caloriesFor100} ккал, вес: ${item.weight}"
         )
     }
 }
@@ -180,7 +187,14 @@ private fun CaloriesItemView(
 @Preview
 fun HomeScreenPreview() {
     HomeScreen(
-        caloriesList = emptyList(),
+        caloriesList = listOf(
+            CaloriesItem(
+                date = Date(),
+                caloriesFor100 = 100,
+                foodName = "Овощи гриль",
+                weight = 400
+            )
+        ),
         todayCurrentCalories = 1234,
         todayTotalCalories = 1300,
         remainingCalories = 200

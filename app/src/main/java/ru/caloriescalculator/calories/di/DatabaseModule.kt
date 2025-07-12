@@ -9,12 +9,14 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.caloriescalculator.calories.data.dao.CaloriesDao
 import ru.caloriescalculator.calories.data.database.CaloriesDatabase
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
 
     @Provides
+    @Singleton
     fun provideCaloriesDatabase(@ApplicationContext context: Context): CaloriesDatabase {
         return Room.databaseBuilder(
             context,
@@ -23,6 +25,7 @@ object DatabaseModule {
     }
 
     @Provides
+    @Singleton
     fun provideCaloriesDao(caloriesDatabase: CaloriesDatabase): CaloriesDao {
         return caloriesDatabase.caloriesDao()
     }

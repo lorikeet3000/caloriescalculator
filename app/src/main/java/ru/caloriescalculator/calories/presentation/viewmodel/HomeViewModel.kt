@@ -1,5 +1,6 @@
 package ru.caloriescalculator.calories.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -7,6 +8,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import ru.caloriescalculator.calories.core.DateConverter
 import ru.caloriescalculator.calories.data.repository.CaloriesRepository
@@ -28,11 +30,15 @@ class HomeViewModel @Inject constructor(
     init {
         viewModelScope.launch(IO) {
             val todayDateString = dateConverter.convertToString(Date())
-            repository.getForDate(todayDateString).collect { items ->
-                _uiState.value = _uiState.value.copy(
-                    items = mapper.mapEntitiesToItems(items)
-                )
-            }
+            repository.getForDate(todayDateString)
+                .catch { exception ->
+                    Log.e("tag", "error " + exception)
+                }
+                .collect { items ->
+                    _uiState.value = _uiState.value.copy(
+                        items = mapper.mapEntitiesToItems(items)
+                    )
+                }
         }
     }
 }
