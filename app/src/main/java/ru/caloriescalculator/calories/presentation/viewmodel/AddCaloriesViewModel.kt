@@ -1,6 +1,5 @@
 package ru.caloriescalculator.calories.presentation.viewmodel
 
-import android.text.format.DateFormat
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import ru.caloriescalculator.calories.core.DateConverter
 import ru.caloriescalculator.calories.data.model.CaloriesEntity
 import ru.caloriescalculator.calories.data.repository.CaloriesRepository
 import ru.caloriescalculator.calories.presentation.event.AddCaloriesEvent
@@ -16,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddCaloriesViewModel @Inject constructor(
-    private val repository: CaloriesRepository
+    private val repository: CaloriesRepository,
+    private val dateConverter: DateConverter
 ) : ViewModel() {
 
     var foodNameValue by mutableStateOf("")
@@ -62,7 +63,7 @@ class AddCaloriesViewModel @Inject constructor(
 
     private fun saveCalories(foodName: String, caloriesFor100: Int, weight: Int) {
         viewModelScope.launch {
-            val dateString = DateFormat.format("dd.MM.yyyy", Date()).toString()
+            val dateString = dateConverter.convertToString(Date())
             val entity = CaloriesEntity(
                 date = dateString,
                 foodName = foodName,

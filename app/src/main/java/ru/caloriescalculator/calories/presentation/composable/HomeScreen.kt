@@ -1,6 +1,8 @@
 package ru.caloriescalculator.calories.presentation.composable
 
 import android.annotation.SuppressLint
+import android.text.format.DateFormat
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,24 +14,21 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ru.caloriescalculator.calories.data.LocalDataSource
 import ru.caloriescalculator.calories.presentation.model.CaloriesItem
-import java.util.Date
-import android.text.format.DateFormat
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import ru.caloriescalculator.calories.presentation.model.HomeScreenState
+import java.util.Date
 
 @Composable
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -39,8 +38,8 @@ fun HomeScreen(
 ) {
     HomeScreen(
         onAddCaloriesClick = onAddCaloriesClick,
-        caloriesList = uiState.calories.meals,
-        todayCurrentCalories = uiState.calories.dayCalories,
+        caloriesList = uiState.items,
+        todayCurrentCalories = uiState.dayCalories,
         todayTotalCalories = uiState.todayTotalCalories,
         remainingCalories = uiState.remainingCalories
     )
@@ -149,8 +148,8 @@ private fun TodayCaloriesListView(
     ) {
         items(calories) { item ->
             CaloriesItemView(
-                foodCalories = item.calories.toString(),
-                foodName = item.name
+                foodCalories = item.caloriesFor100.toString(),
+                foodName = item.foodName
             )
             HorizontalDivider()
         }
@@ -181,7 +180,7 @@ private fun CaloriesItemView(
 @Preview
 fun HomeScreenPreview() {
     HomeScreen(
-        caloriesList = LocalDataSource.todayCaloriesTest.meals,
+        caloriesList = emptyList(),
         todayCurrentCalories = 1234,
         todayTotalCalories = 1300,
         remainingCalories = 200

@@ -4,20 +4,7 @@ import java.util.Date
 
 data class CaloriesItem(
     val date: Date,
-    val calories: Int,
-    val name: String,
+    val caloriesFor100: Int,
+    val foodName: String,
     val weight: Int = 0
 )
-
-data class DayCaloriesItem(
-    val meals: List<CaloriesItem>,
-    val date: Date
-) {
-
-    val dayCalories: Int
-        get() {
-            return meals.sumOf {
-                it.calories
-            }
-        }
-}
