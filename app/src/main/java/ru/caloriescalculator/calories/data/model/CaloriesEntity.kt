@@ -12,5 +12,5 @@ data class CaloriesEntity(
     @ColumnInfo(name = "calories_for_100") val caloriesFor100: Int
 ) {
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
+    var id: Long = 0
 }

@@ -16,4 +16,12 @@ class CaloriesRepository @Inject constructor(
     fun getForDate(date: String): Flow<List<CaloriesEntity>> {
         return caloriesDao.getForDate(date)
     }
+
+    fun getAllItems(): Flow<List<CaloriesEntity>> {
+        return caloriesDao.getAll()
+    }
+
+    suspend fun deleteItem(id: Long) {
+        caloriesDao.deleteItem(id)
+    }
 }

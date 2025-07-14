@@ -16,7 +16,8 @@ class CaloriesMapper @Inject constructor(
                 date = date,
                 caloriesFor100 = entity.caloriesFor100,
                 foodName = entity.foodName,
-                weight = entity.weight
+                weight = entity.weight,
+                id = entity.id
             )
         }
     }

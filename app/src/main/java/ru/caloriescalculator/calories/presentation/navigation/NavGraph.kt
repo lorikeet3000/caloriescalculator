@@ -13,6 +13,7 @@ import ru.caloriescalculator.calories.presentation.composable.HomeScreen
 import ru.caloriescalculator.calories.presentation.composable.ProfileScreen
 import ru.caloriescalculator.calories.presentation.composable.ViewDayCaloriesScreen
 import ru.caloriescalculator.calories.presentation.viewmodel.AddCaloriesViewModel
+import ru.caloriescalculator.calories.presentation.viewmodel.HistoryViewModel
 import ru.caloriescalculator.calories.presentation.viewmodel.HomeViewModel
 
 @Composable
@@ -37,7 +38,14 @@ fun NavGraph(
             ProfileScreen()
         }
         composable(Screen.History.route) {
-            HistoryScreen()
+            val viewModel = hiltViewModel<HistoryViewModel>()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            HistoryScreen(
+                allItems = uiState.value.items,
+                itemBottomSheet = uiState.value.itemBottomSheet,
+                confirmDeleteDialogState = uiState.value.confirmDeleteDialogState,
+                onEvent = viewModel::onEvent
+            )
         }
         composable(Screen.AddCalories.route) {
             val viewModel = hiltViewModel<AddCaloriesViewModel>()

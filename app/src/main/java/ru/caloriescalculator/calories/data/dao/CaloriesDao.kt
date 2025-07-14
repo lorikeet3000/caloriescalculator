@@ -16,4 +16,7 @@ interface CaloriesDao {
 
     @Query("SELECT * FROM calories WHERE date = :date")
     fun getForDate(date: String): Flow<List<CaloriesEntity>>
+
+    @Query("DELETE FROM calories WHERE id = :id")
+    suspend fun deleteItem(id: Long)
 }

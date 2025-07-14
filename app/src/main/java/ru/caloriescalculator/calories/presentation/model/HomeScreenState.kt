@@ -11,7 +11,7 @@ data class HomeScreenState(
     val dayCalories: Int
         get() {
             return items.sumOf {
-                it.caloriesFor100
+                it.totalCalories
             }
         }
 

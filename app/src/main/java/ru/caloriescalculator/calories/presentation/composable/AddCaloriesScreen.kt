@@ -164,7 +164,7 @@ private fun EnterCaloriesAndWeight(
 }
 
 @Composable
-fun ConfirmDialog(
+private fun ConfirmDialog(
     state: AddCaloriesConfirmDialogState,
     onDismissClick: () -> Unit,
 ) {

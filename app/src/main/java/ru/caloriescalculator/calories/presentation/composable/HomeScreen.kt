@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -153,33 +152,6 @@ private fun TodayCaloriesListView(
             )
             HorizontalDivider()
         }
-    }
-}
-
-@Composable
-private fun CaloriesItemView(
-    item: CaloriesItem
-) {
-    Column {
-        Row(modifier = Modifier.fillMaxWidth()
-            .padding(top = 16.dp, start = 16.dp, end = 16.dp)) {
-            Text(
-                text = item.foodName,
-                fontSize = 16.sp,
-            )
-            Spacer(Modifier.weight(1f))
-            Text(
-                text = "${item.totalCalories} ккал",
-                fontSize = 22.sp,
-            )
-        }
-        Text(
-            modifier = Modifier.fillMaxWidth()
-                .padding(end = 4.dp),
-            textAlign = TextAlign.End,
-            fontSize = 12.sp,
-            text = "на 100г/мл: ${item.caloriesFor100} ккал, вес: ${item.weight}"
-        )
     }
 }
 
