@@ -13,9 +13,10 @@ import ru.caloriescalculator.calories.data.repository.CaloriesRepository
 import ru.caloriescalculator.calories.presentation.event.HistoryEvent
 import ru.caloriescalculator.calories.presentation.mapper.CaloriesMapper
 import ru.caloriescalculator.calories.presentation.model.CaloriesItem
+import ru.caloriescalculator.calories.presentation.model.ConfirmDeleteDialogState
 import ru.caloriescalculator.calories.presentation.model.DayCalories
-import ru.caloriescalculator.calories.presentation.model.HistoryConfirmDeleteDialogState
 import ru.caloriescalculator.calories.presentation.model.HistoryScreenState
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,11 +32,11 @@ class HistoryViewModel @Inject constructor(
     init {
         viewModelScope.launch(IO) {
             repository.getAllItems().collect { items ->
-                val groupedByDate = items.reversed().groupBy {
+                val groupedByDate = items.groupBy {
                     it.date
                 }
                 val dayCaloriesList = mutableListOf<DayCalories>()
-                groupedByDate.entries.forEach { entry ->
+                groupedByDate.entries.reversed().forEach { entry ->
                     dayCaloriesList.add(
                         DayCalories(
                             dayItems = mapper.mapEntitiesToItems(entry.value),
@@ -58,16 +59,32 @@ class HistoryViewModel @Inject constructor(
             is HistoryEvent.OnItemEditClick -> onItemEdit(event.item)
             is HistoryEvent.OnConfirmDeleteClick -> onConfirmItemDelete(event.item)
             HistoryEvent.OnDeleteDialogDismiss -> onDeleteDialogDismiss()
+            is HistoryEvent.OnAddForTodayClick -> onAddForToday(event.item)
         }
+    }
+
+    private fun onAddForToday(item: CaloriesItem) {
+        viewModelScope.launch(IO) {
+            val newItem = item.copy(
+                date = Date(),
+                id = 0
+            )
+            repository.addCalories(mapper.mapItemToEntity(newItem))
+        }
+        closeBottomSheet()
+    }
+
+    private fun closeBottomSheet() {
+        _uiState.value = _uiState.value.copy(
+            itemBottomSheet = null
+        )
     }
 
     private fun onConfirmItemDelete(item: CaloriesItem) {
         viewModelScope.launch(IO) {
             repository.deleteItem(item.id)
         }
-        _uiState.value = _uiState.value.copy(
-            itemBottomSheet = null
-        )
+        closeBottomSheet()
         _uiState.value = _uiState.value.copy(
             confirmDeleteDialogState = null
         )
@@ -79,7 +96,7 @@ class HistoryViewModel @Inject constructor(
 
     private fun onItemDelete(item: CaloriesItem) {
         _uiState.value = _uiState.value.copy(
-            confirmDeleteDialogState = HistoryConfirmDeleteDialogState(
+            confirmDeleteDialogState = ConfirmDeleteDialogState(
                 item = item
             )
         )

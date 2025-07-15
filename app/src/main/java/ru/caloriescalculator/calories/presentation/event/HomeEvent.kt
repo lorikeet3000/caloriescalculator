@@ -2,29 +2,29 @@ package ru.caloriescalculator.calories.presentation.event
 
 import ru.caloriescalculator.calories.presentation.model.CaloriesItem
 
-sealed interface HistoryEvent {
+sealed interface HomeEvent {
 
     data class OnItemClick(
         val item: CaloriesItem
-    ) : HistoryEvent
+    ) : HomeEvent
 
-    data object OnItemBottomSheetClose : HistoryEvent
+    data object OnItemBottomSheetClose : HomeEvent
 
     data class OnItemEditClick(
         val item: CaloriesItem
-    ) : HistoryEvent
+    ) : HomeEvent
 
     data class OnItemDeleteClick(
         val item: CaloriesItem
-    ) : HistoryEvent
+    ) : HomeEvent
 
-    data object OnDeleteDialogDismiss : HistoryEvent
+    data object OnDeleteDialogDismiss : HomeEvent
 
     data class OnConfirmDeleteClick(
         val item: CaloriesItem
-    ) : HistoryEvent
+    ) : HomeEvent
 
     data class OnAddForTodayClick(
         val item: CaloriesItem
-    ) : HistoryEvent
+    ) : HomeEvent
 }

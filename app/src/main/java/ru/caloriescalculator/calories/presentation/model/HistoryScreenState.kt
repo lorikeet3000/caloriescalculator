@@ -5,7 +5,7 @@ import java.util.Date
 data class HistoryScreenState(
     val items: List<DayCalories> = emptyList<DayCalories>(),
     val itemBottomSheet: CaloriesItem? = null,
-    val confirmDeleteDialogState: HistoryConfirmDeleteDialogState? = null,
+    val confirmDeleteDialogState: ConfirmDeleteDialogState? = null,
 )
 
 data class DayCalories(

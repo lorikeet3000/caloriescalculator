@@ -31,7 +31,8 @@ fun NavGraph(
                 onAddCaloriesClick = {
                     navHostController.navigate(Screen.AddCalories.route)
                 },
-                uiState = uiState
+                uiState = uiState,
+                onEvent = viewModel::onEvent
             )
         }
         composable(Screen.Profile.route) {
@@ -41,9 +42,7 @@ fun NavGraph(
             val viewModel = hiltViewModel<HistoryViewModel>()
             val uiState = viewModel.uiState.collectAsStateWithLifecycle()
             HistoryScreen(
-                allItems = uiState.value.items,
-                itemBottomSheet = uiState.value.itemBottomSheet,
-                confirmDeleteDialogState = uiState.value.confirmDeleteDialogState,
+                uiState = uiState.value,
                 onEvent = viewModel::onEvent
             )
         }
@@ -54,11 +53,7 @@ fun NavGraph(
                 foodName = viewModel.foodNameValue,
                 caloriesFor100 = viewModel.caloriesFor100Value,
                 foodWeight = viewModel.foodWeightValue,
-                isFoodNameError = uiState.value.isFoodNameError,
-                isCaloriesError = uiState.value.isCaloriesError,
-                isWeightError = uiState.value.isWeightError,
-                confirmDialogState = uiState.value.confirmDialogState,
-                evaluatedCalories = uiState.value.evaluatedCalories,
+                uiState = uiState.value,
                 onScreenClose = {
                     navHostController.popBackStack()
                 },

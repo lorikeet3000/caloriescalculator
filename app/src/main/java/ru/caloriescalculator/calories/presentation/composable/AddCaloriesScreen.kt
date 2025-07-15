@@ -22,23 +22,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.caloriescalculator.calories.presentation.event.AddCaloriesEvent
 import ru.caloriescalculator.calories.presentation.model.AddCaloriesConfirmDialogState
+import ru.caloriescalculator.calories.presentation.model.AddCaloriesScreenState
 
 @Composable
 fun AddCaloriesScreen(
     foodName: String,
     caloriesFor100: String,
     foodWeight: String,
-    isFoodNameError: Boolean,
-    isCaloriesError: Boolean,
-    isWeightError: Boolean,
-    evaluatedCalories: Int?,
-    confirmDialogState: AddCaloriesConfirmDialogState?,
+    uiState: AddCaloriesScreenState,
     onScreenClose: () -> Unit,
     onEvent: (AddCaloriesEvent) -> Unit
 ) {
-    if (confirmDialogState != null) {
+    if (uiState.confirmDialogState != null) {
         ConfirmDialog(
-            state = confirmDialogState,
+            state = uiState.confirmDialogState,
             onDismissClick = onScreenClose
         )
     }
@@ -47,7 +44,7 @@ fun AddCaloriesScreen(
         Spacer(modifier = Modifier.height(32.dp))
         EnterFoodNameView(
             foodName = foodName,
-            isFoodNameError = isFoodNameError,
+            isFoodNameError = uiState.isFoodNameError,
             onFoodNameChanged = {
                 onEvent(AddCaloriesEvent.FoodNameChange(it))
             }
@@ -56,9 +53,9 @@ fun AddCaloriesScreen(
         EnterCaloriesAndWeight(
             caloriesFor100 = caloriesFor100,
             foodWeight = foodWeight,
-            isCaloriesError = isCaloriesError,
-            isWeightError = isWeightError,
-            evaluatedCalories = evaluatedCalories,
+            isCaloriesError = uiState.isCaloriesError,
+            isWeightError = uiState.isWeightError,
+            evaluatedCalories = uiState.evaluatedCalories,
             onCaloriesFor100Changed = {
                 onEvent(AddCaloriesEvent.CaloriesFor100Update(it))
             },
@@ -200,11 +197,13 @@ fun AddCaloriesScreenPreview() {
         foodName = "",
         caloriesFor100 = "",
         foodWeight = "",
-        isFoodNameError = false,
-        isCaloriesError = false,
-        isWeightError = false,
-        confirmDialogState = null,
-        evaluatedCalories = 100,
+        uiState = AddCaloriesScreenState(
+            isFoodNameError = false,
+            isCaloriesError = false,
+            isWeightError = false,
+            confirmDialogState = null,
+            evaluatedCalories = 100,
+        ),
         onScreenClose = {},
         onEvent = {}
     )

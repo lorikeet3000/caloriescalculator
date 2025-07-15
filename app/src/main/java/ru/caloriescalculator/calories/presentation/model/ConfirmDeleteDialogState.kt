@@ -1,5 +1,5 @@
 package ru.caloriescalculator.calories.presentation.model
 
-data class HistoryConfirmDeleteDialogState(
+data class ConfirmDeleteDialogState(
     val item: CaloriesItem
 )
