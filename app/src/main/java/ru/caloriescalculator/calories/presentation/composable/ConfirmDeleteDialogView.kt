@@ -34,7 +34,7 @@ fun ConfirmDeleteDialogView(
             }
         },
         text = {
-            Text(text = "Вы уверены, что хотите удалить запись?")
+            Text(text = "Вы уверены, что хотите удалить продукт?")
         }
     )
 }

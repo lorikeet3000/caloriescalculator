@@ -11,6 +11,4 @@ sealed class Screen(val title: String, val icon: ImageVector, val route: String)
     object Profile : Screen(title = "Профиль", icon = Icons.Default.Person, route = "profile_screen")
     object History : Screen(title = "История", icon = Icons.Default.DateRange, route = "history_screen")
     object AddCalories : Screen(title = "Добавить калории", icon = Icons.Default.Home, route = "add_screen")
-    object ViewDayCalories :
-        Screen(title = "Просмотреть калории", icon = Icons.Default.Home, route = "view_day_calories_screen")
 }

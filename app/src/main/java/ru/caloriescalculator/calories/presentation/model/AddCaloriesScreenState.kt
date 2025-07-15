@@ -5,5 +5,5 @@ data class AddCaloriesScreenState(
     val isCaloriesError: Boolean = false,
     val isWeightError: Boolean = false,
     val confirmDialogState: AddCaloriesConfirmDialogState? = null,
-    val evaluatedCalories: Int? = null
+    val evaluatedCalories: Int = 0
 )

@@ -11,10 +11,10 @@ import ru.caloriescalculator.calories.presentation.composable.AddCaloriesScreen
 import ru.caloriescalculator.calories.presentation.composable.HistoryScreen
 import ru.caloriescalculator.calories.presentation.composable.HomeScreen
 import ru.caloriescalculator.calories.presentation.composable.ProfileScreen
-import ru.caloriescalculator.calories.presentation.composable.ViewDayCaloriesScreen
 import ru.caloriescalculator.calories.presentation.viewmodel.AddCaloriesViewModel
 import ru.caloriescalculator.calories.presentation.viewmodel.HistoryViewModel
 import ru.caloriescalculator.calories.presentation.viewmodel.HomeViewModel
+import ru.caloriescalculator.calories.presentation.viewmodel.ProfileViewModel
 
 @Composable
 fun NavGraph(
@@ -32,11 +32,18 @@ fun NavGraph(
                     navHostController.navigate(Screen.AddCalories.route)
                 },
                 uiState = uiState,
+                isRefreshing = viewModel.isRefreshing.value,
                 onEvent = viewModel::onEvent
             )
         }
         composable(Screen.Profile.route) {
-            ProfileScreen()
+            val viewModel = hiltViewModel<ProfileViewModel>()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            ProfileScreen(
+                uiState = uiState.value,
+                totalCaloriesValue = viewModel.totalCaloriesValue,
+                onEvent = viewModel::onEvent
+            )
         }
         composable(Screen.History.route) {
             val viewModel = hiltViewModel<HistoryViewModel>()
@@ -59,9 +66,6 @@ fun NavGraph(
                 },
                 onEvent = viewModel::onEvent
             )
-        }
-        composable(Screen.ViewDayCalories.route) {
-            ViewDayCaloriesScreen()
         }
     }
 }

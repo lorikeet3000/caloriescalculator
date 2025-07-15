@@ -83,7 +83,7 @@ class AddCaloriesViewModel @Inject constructor(
             )
         } else {
             _uiState.value = _uiState.value.copy(
-                evaluatedCalories = null
+                evaluatedCalories = 0
             )
         }
     }

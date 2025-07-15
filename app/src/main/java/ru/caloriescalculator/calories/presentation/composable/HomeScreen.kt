@@ -2,7 +2,6 @@ package ru.caloriescalculator.calories.presentation.composable
 
 import android.annotation.SuppressLint
 import android.text.format.DateFormat
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -21,6 +20,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,10 +39,10 @@ import java.util.Date
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 fun HomeScreen(
     uiState: HomeScreenState,
+    isRefreshing: Boolean = false,
     onAddCaloriesClick: () -> Unit = {},
     onEvent: (HomeEvent) -> Unit = {}
 ) {
-
     if (uiState.itemBottomSheet != null) {
         ItemBottomSheetView(
             item = uiState.itemBottomSheet,
@@ -73,28 +73,32 @@ fun HomeScreen(
     }
     HomeScreenContent(
         uiState = uiState,
+        isRefreshing = isRefreshing,
         onAddCaloriesClick = onAddCaloriesClick,
         onItemClick = {
             onEvent(HomeEvent.OnItemClick(it))
+        },
+        onRefresh = {
+            onEvent(HomeEvent.OnPullToRefresh)
         }
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeScreenContent(
     uiState: HomeScreenState,
+    isRefreshing: Boolean,
     onAddCaloriesClick: () -> Unit,
     onItemClick: (CaloriesItem) -> Unit,
+    onRefresh: () -> Unit,
 ) {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
+    PullToRefreshBox(
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh,
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 50.dp)
+        Column(
+            modifier = Modifier.fillMaxWidth(),
         ) {
             CurrentTodayCaloriesView(
                 todayCurrentCalories = uiState.todayCurrentCalories
@@ -104,21 +108,21 @@ private fun HomeScreenContent(
                     todayTotalCalories = uiState.todayTotalCalories
                 )
             }
+            RemainingCaloriesView(
+                modifier = Modifier.padding(bottom = 24.dp),
+                remainingCalories = uiState.remainingCalories
+            )
+            AddCaloriesView(
+                modifier = Modifier.padding(bottom = 24.dp),
+                onAddCaloriesClick = onAddCaloriesClick,
+            )
+            TodayHeaderView()
+            HorizontalDivider(thickness = 2.dp)
+            TodayCaloriesListView(
+                calories = uiState.items,
+                onItemClick = onItemClick
+            )
         }
-        RemainingCaloriesView(
-            modifier = Modifier.padding(bottom = 24.dp),
-            remainingCalories = uiState.remainingCalories
-        )
-        AddCaloriesView(
-            modifier = Modifier.padding(bottom = 24.dp),
-            onAddCaloriesClick = onAddCaloriesClick,
-        )
-        TodayHeaderView()
-        HorizontalDivider(thickness = 2.dp)
-        TodayCaloriesListView(
-            calories = uiState.items,
-            onItemClick = onItemClick
-        )
     }
 }
 
@@ -149,6 +153,10 @@ private fun CurrentTodayCaloriesView(
     todayCurrentCalories: Int
 ) {
     Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 50.dp),
+        textAlign = TextAlign.Center,
         text = "$todayCurrentCalories ккал",
         fontSize = 34.sp,
         fontWeight = FontWeight.Bold,
@@ -160,8 +168,9 @@ private fun TotalTodayCaloriesView(
     todayTotalCalories: Int
 ) {
     Text(
-        text = "/$todayTotalCalories ккал",
-        fontSize = 30.sp,
+        modifier = Modifier.fillMaxWidth(),
+        textAlign = TextAlign.Center,
+        text = "Цель: $todayTotalCalories ккал",
     )
 }
 
@@ -171,7 +180,7 @@ private fun RemainingCaloriesView(
     remainingCalories: Int
 ) {
     Text(
-        text = "Осталось $remainingCalories ккал",
+        text = "Осталось: $remainingCalories ккал",
         modifier = modifier.fillMaxWidth(),
         textAlign = TextAlign.Center
     )

@@ -27,4 +27,6 @@ sealed interface HomeEvent {
     data class OnAddForTodayClick(
         val item: CaloriesItem
     ) : HomeEvent
+
+    data object OnPullToRefresh : HomeEvent
 }
