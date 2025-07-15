@@ -43,17 +43,11 @@ class ProfileViewModel @Inject constructor(
     private fun onTotalCaloriesChanged(value: String) {
         totalCaloriesValue = value
         val totalCaloriesInt = value.toIntOrNull()
-        if (totalCaloriesInt != null) {
-            _uiState.value = _uiState.value.copy(
-                isTotalCaloriesError = false
-            )
-            viewModelScope.launch {
-                repository.saveTotalCalories(totalCaloriesInt)
-            }
-        } else {
-            _uiState.value = _uiState.value.copy(
-                isTotalCaloriesError = true
-            )
+        _uiState.value = _uiState.value.copy(
+            isTotalCaloriesError = totalCaloriesInt == null
+        )
+        viewModelScope.launch {
+            repository.saveTotalCalories(totalCaloriesInt ?: 0)
         }
     }
 }
