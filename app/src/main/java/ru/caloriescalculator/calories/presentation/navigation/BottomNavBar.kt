@@ -6,20 +6,15 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
 fun BottomNavBar(
     navController: NavController
 ) {
-    val screenItems = listOf(
-        Screen.Home,
-        Screen.Profile,
-        Screen.History
-    )
     BottomNavigation(
         backgroundColor = Color.White,
         windowInsets = BottomNavigationDefaults.windowInsets

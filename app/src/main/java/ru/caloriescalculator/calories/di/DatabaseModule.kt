@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.caloriescalculator.calories.data.dao.CaloriesDao
+import ru.caloriescalculator.calories.data.dao.ProductsDao
 import ru.caloriescalculator.calories.data.database.CaloriesDatabase
 import javax.inject.Singleton
 
@@ -21,12 +22,20 @@ object DatabaseModule {
         return Room.databaseBuilder(
             context,
             CaloriesDatabase::class.java, "calories.db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration(dropAllTables = true)
+            .build()
     }
 
     @Provides
     @Singleton
     fun provideCaloriesDao(caloriesDatabase: CaloriesDatabase): CaloriesDao {
         return caloriesDatabase.caloriesDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideProductsDao(caloriesDatabase: CaloriesDatabase): ProductsDao {
+        return caloriesDatabase.productsDao()
     }
 }

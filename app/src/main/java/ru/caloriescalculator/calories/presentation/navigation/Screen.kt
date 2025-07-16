@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Screen(val title: String, val icon: ImageVector, val route: String) {
@@ -11,4 +12,12 @@ sealed class Screen(val title: String, val icon: ImageVector, val route: String)
     object Profile : Screen(title = "Профиль", icon = Icons.Default.Person, route = "profile_screen")
     object History : Screen(title = "История", icon = Icons.Default.DateRange, route = "history_screen")
     object AddCalories : Screen(title = "Добавить калории", icon = Icons.Default.Home, route = "add_screen")
+    object Products : Screen(title = "Продукты", icon = Icons.Default.ShoppingCart, route = "products_screen")
 }
+
+val screenItems = listOf(
+    Screen.Home,
+    Screen.Profile,
+    Screen.Products,
+    Screen.History
+)

@@ -18,6 +18,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,7 +29,6 @@ import ru.caloriescalculator.calories.presentation.model.DayCalories
 import ru.caloriescalculator.calories.presentation.model.HistoryScreenState
 import java.util.Date
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HistoryScreen(
     uiState: HistoryScreenState,
@@ -62,6 +62,31 @@ fun HistoryScreen(
             }
         )
     }
+    if (uiState.items.isEmpty()) {
+        Text(
+            text = "История пуста",
+            fontSize = 22.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(32.dp)
+        )
+    } else {
+        ItemsListView(
+            uiState = uiState,
+            onItemClick = {
+                onEvent(HistoryEvent.OnItemClick(it))
+            }
+        )
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun ItemsListView(
+    uiState: HistoryScreenState,
+    onItemClick: (CaloriesItem) -> Unit,
+) {
     LazyColumn {
         uiState.items.forEach { dayItem ->
             stickyHeader {
@@ -70,9 +95,7 @@ fun HistoryScreen(
             items(dayItem.dayItems) { caloriesItem ->
                 CaloriesItemView(
                     item = caloriesItem,
-                    onClick = {
-                        onEvent(HistoryEvent.OnItemClick(it))
-                    }
+                    onClick = onItemClick
                 )
             }
         }
@@ -160,6 +183,19 @@ fun HistoryScreenPreview() {
                     date = Date()
                 )
             )
+        ),
+        onEvent = {},
+    )
+}
+
+@Preview
+@Composable
+fun HistoryScreenPreviewEmpty() {
+    HistoryScreen(
+        uiState = HistoryScreenState(
+            itemBottomSheet = null,
+            confirmDeleteDialogState = null,
+            items = emptyList(),
         ),
         onEvent = {},
     )

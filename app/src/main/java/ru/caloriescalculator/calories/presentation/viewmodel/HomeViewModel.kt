@@ -35,6 +35,7 @@ class HomeViewModel @Inject constructor(
     init {
         loadItems()
         loadTotalCalories()
+        getTodayDate()
     }
 
     fun onEvent(event: HomeEvent) {
@@ -53,6 +54,13 @@ class HomeViewModel @Inject constructor(
     private fun onPullToRefresh() {
         _isRefreshing.update { true }
         loadItems()
+        getTodayDate()
+    }
+
+    private fun getTodayDate() {
+        _uiState.value = _uiState.value.copy(
+            date = dateConverter.getTodayDateString()
+        )
     }
 
     private fun loadItems() {

@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import ru.caloriescalculator.calories.core.CaloriesCalculator
 import ru.caloriescalculator.calories.data.repository.CaloriesRepository
 import ru.caloriescalculator.calories.presentation.event.AddCaloriesEvent
 import ru.caloriescalculator.calories.presentation.mapper.CaloriesMapper
@@ -75,38 +76,30 @@ class AddCaloriesViewModel @Inject constructor(
     private fun evaluateCalories() {
         val caloriesFor100 = caloriesFor100Value.toIntOrNull()
         val weight = foodWeightValue.toIntOrNull()
-        if (caloriesFor100 != null && caloriesFor100 != 0 && weight != null) {
-            val caloriesFor1 = caloriesFor100.toDouble() / 100.0
-            val caloriesForWeight = caloriesFor1 * weight.toDouble()
-            _uiState.value = _uiState.value.copy(
-                evaluatedCalories = caloriesForWeight.toInt()
+        val evaluatedCalories = if (caloriesFor100 != null && caloriesFor100 != 0 && weight != null) {
+            CaloriesCalculator.calculateTotalCalories(
+                caloriesFor100 = caloriesFor100,
+                weight = weight,
             )
         } else {
-            _uiState.value = _uiState.value.copy(
-                evaluatedCalories = 0
-            )
+            0
         }
+        _uiState.value = _uiState.value.copy(evaluatedCalories = evaluatedCalories)
     }
 
     private fun onCaloriesFor100SubmitClicked() {
         val caloriesFor100 = caloriesFor100Value.toIntOrNull()
         val weight = foodWeightValue.toIntOrNull()
         if (foodNameValue.isEmpty()) {
-            _uiState.value = _uiState.value.copy(
-                isFoodNameError = true
-            )
+            _uiState.value = _uiState.value.copy(isFoodNameError = true)
             return
         }
         if (caloriesFor100 == null) {
-            _uiState.value = _uiState.value.copy(
-                isCaloriesError = true
-            )
+            _uiState.value = _uiState.value.copy(isCaloriesError = true)
             return
         }
         if (weight == null) {
-            _uiState.value = _uiState.value.copy(
-                isWeightError = true
-            )
+            _uiState.value = _uiState.value.copy(isWeightError = true)
             return
         }
         saveCalories(foodNameValue, caloriesFor100, weight)

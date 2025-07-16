@@ -1,14 +1,16 @@
 package ru.caloriescalculator.calories.presentation.model
 
 import ru.caloriescalculator.calories.core.CaloriesCalculator
-import java.util.Date
 
-data class CaloriesItem(
-    val date: Date,
+data class ProductsScreenState(
+    val products: List<Product> = emptyList<Product>()
+)
+
+data class Product(
+    val name: String,
     val caloriesFor100: Int,
-    val foodName: String,
-    val weight: Int = 0,
-    val id: Long = 0,
+    val weight: Int,
+    val id: Long = 0
 ) {
 
     val totalCalories: Int

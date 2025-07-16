@@ -1,9 +1,7 @@
 package ru.caloriescalculator.calories.presentation.composable
 
 import android.annotation.SuppressLint
-import android.text.format.DateFormat
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -116,7 +114,9 @@ private fun HomeScreenContent(
                 modifier = Modifier.padding(bottom = 24.dp),
                 onAddCaloriesClick = onAddCaloriesClick,
             )
-            TodayHeaderView()
+            TodayHeaderView(
+                todayDate = uiState.date
+            )
             HorizontalDivider(thickness = 2.dp)
             TodayCaloriesListView(
                 calories = uiState.items,
@@ -187,10 +187,11 @@ private fun RemainingCaloriesView(
 }
 
 @Composable
-private fun TodayHeaderView() {
-    val date = DateFormat.format("dd MMM", Date()).toString()
+private fun TodayHeaderView(
+    todayDate: String
+) {
     Text(
-        text = "Сегодня, $date",
+        text = "Сегодня, $todayDate",
         modifier = Modifier.padding(16.dp),
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp
@@ -202,9 +203,7 @@ private fun TodayCaloriesListView(
     calories: List<CaloriesItem>,
     onItemClick: (CaloriesItem) -> Unit
 ) {
-    LazyColumn(
-        contentPadding = PaddingValues(bottom = 140.dp),
-    ) {
+    LazyColumn {
         items(calories) { item ->
             CaloriesItemView(
                 item = item,

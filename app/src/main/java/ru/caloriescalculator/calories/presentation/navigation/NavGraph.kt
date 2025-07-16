@@ -10,10 +10,12 @@ import androidx.navigation.compose.composable
 import ru.caloriescalculator.calories.presentation.composable.AddCaloriesScreen
 import ru.caloriescalculator.calories.presentation.composable.HistoryScreen
 import ru.caloriescalculator.calories.presentation.composable.HomeScreen
+import ru.caloriescalculator.calories.presentation.composable.ProductsScreen
 import ru.caloriescalculator.calories.presentation.composable.ProfileScreen
 import ru.caloriescalculator.calories.presentation.viewmodel.AddCaloriesViewModel
 import ru.caloriescalculator.calories.presentation.viewmodel.HistoryViewModel
 import ru.caloriescalculator.calories.presentation.viewmodel.HomeViewModel
+import ru.caloriescalculator.calories.presentation.viewmodel.ProductsViewModel
 import ru.caloriescalculator.calories.presentation.viewmodel.ProfileViewModel
 
 @Composable
@@ -27,12 +29,13 @@ fun NavGraph(
         composable(Screen.Home.route) {
             val viewModel = hiltViewModel<HomeViewModel>()
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
             HomeScreen(
                 onAddCaloriesClick = {
                     navHostController.navigate(Screen.AddCalories.route)
                 },
                 uiState = uiState,
-                isRefreshing = viewModel.isRefreshing.value,
+                isRefreshing = isRefreshing,
                 onEvent = viewModel::onEvent
             )
         }
@@ -64,6 +67,14 @@ fun NavGraph(
                 onScreenClose = {
                     navHostController.popBackStack()
                 },
+                onEvent = viewModel::onEvent
+            )
+        }
+        composable(Screen.Products.route) {
+            val viewModel = hiltViewModel<ProductsViewModel>()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            ProductsScreen(
+                uiState = uiState.value,
                 onEvent = viewModel::onEvent
             )
         }

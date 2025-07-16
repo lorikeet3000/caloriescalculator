@@ -7,6 +7,7 @@ import java.util.Locale
 import javax.inject.Inject
 
 private const val DATE_FORMAT = "dd.MM.yyyy"
+private const val HOME_DATE_FORMAT = "dd MMM"
 
 class DateConverter @Inject constructor() {
 
@@ -21,5 +22,9 @@ class DateConverter @Inject constructor() {
         } catch (_: Exception) {
             Date()
         }
+    }
+
+    fun getTodayDateString(): String {
+        return DateFormat.format(HOME_DATE_FORMAT, Date()).toString()
     }
 }
