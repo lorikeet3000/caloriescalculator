@@ -7,6 +7,4 @@ sealed interface ProductsEvent {
     data class OnProductClick(
         val product: Product,
     ) : ProductsEvent
-
-    data object OnAddProductClick : ProductsEvent
 }

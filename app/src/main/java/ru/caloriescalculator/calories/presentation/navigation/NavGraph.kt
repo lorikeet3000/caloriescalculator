@@ -1,18 +1,25 @@
 package ru.caloriescalculator.calories.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import ru.caloriescalculator.calories.presentation.composable.AddCaloriesScreen
+import ru.caloriescalculator.calories.presentation.composable.AddProductScreen
 import ru.caloriescalculator.calories.presentation.composable.HistoryScreen
 import ru.caloriescalculator.calories.presentation.composable.HomeScreen
 import ru.caloriescalculator.calories.presentation.composable.ProductsScreen
 import ru.caloriescalculator.calories.presentation.composable.ProfileScreen
+import ru.caloriescalculator.calories.presentation.effect.ProductEffect
 import ru.caloriescalculator.calories.presentation.viewmodel.AddCaloriesViewModel
+import ru.caloriescalculator.calories.presentation.viewmodel.AddProductViewModel
 import ru.caloriescalculator.calories.presentation.viewmodel.HistoryViewModel
 import ru.caloriescalculator.calories.presentation.viewmodel.HomeViewModel
 import ru.caloriescalculator.calories.presentation.viewmodel.ProductsViewModel
@@ -75,7 +82,37 @@ fun NavGraph(
             val uiState = viewModel.uiState.collectAsStateWithLifecycle()
             ProductsScreen(
                 uiState = uiState.value,
+                onAddProductClick = {
+                    navHostController.navigate(Screen.AddProduct.route)
+                },
                 onEvent = viewModel::onEvent
+            )
+        }
+        composable(Screen.AddProduct.route) {
+            val viewModel = hiltViewModel<AddProductViewModel>()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+            val lifecycleOwner = LocalLifecycleOwner.current
+            LaunchedEffect(lifecycleOwner.lifecycle) {
+                lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.effectsSharedFlow.collect { event ->
+                        when (event) {
+                            ProductEffect.CloseScreen -> {
+                                navHostController.popBackStack()
+                            }
+                        }
+                    }
+                }
+            }
+            AddProductScreen(
+                foodName = viewModel.foodNameValue,
+                caloriesFor100 = viewModel.caloriesFor100Value,
+                foodWeight = viewModel.foodWeightValue,
+                comment = viewModel.commentValue,
+                uiState = uiState.value,
+                onEvent = viewModel::onEvent,
+                onScreenClose = {
+                    navHostController.popBackStack()
+                }
             )
         }
     }

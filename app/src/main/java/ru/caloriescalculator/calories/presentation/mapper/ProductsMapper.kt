@@ -13,6 +13,7 @@ class ProductsMapper
                 caloriesFor100 = entity.caloriesFor100,
                 name = entity.name,
                 weight = entity.weight,
+                comment = entity.comment,
                 id = entity.id
             )
         }
@@ -22,7 +23,8 @@ class ProductsMapper
         return ProductEntity(
             name = product.name,
             weight = product.weight,
-            caloriesFor100 = product.caloriesFor100
+            caloriesFor100 = product.caloriesFor100,
+            comment = product.comment,
         )
     }
 }

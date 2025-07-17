@@ -29,16 +29,15 @@ import ru.caloriescalculator.calories.presentation.model.ProductsScreenState
 @Composable
 fun ProductsScreen(
     uiState: ProductsScreenState,
-    onEvent: (ProductsEvent) -> Unit,
+    onAddProductClick: () -> Unit = {},
+    onEvent: (ProductsEvent) -> Unit = {},
 ) {
     ProductsScreen(
         products = uiState.products,
         onProductClick = {
             onEvent(ProductsEvent.OnProductClick(it))
         },
-        onAddProductClick = {
-            onEvent(ProductsEvent.OnAddProductClick)
-        }
+        onAddProductClick = onAddProductClick,
     )
 }
 
@@ -155,7 +154,8 @@ private fun ProductsScreenPreview() {
                 Product(
                     name = "Баклажан",
                     caloriesFor100 = 65,
-                    weight = 200
+                    weight = 20,
+                    comment = "1 слайс"
                 )
             )
         ),

@@ -31,15 +31,10 @@ class ProductsViewModel @Inject constructor(
     fun onEvent(event: ProductsEvent) {
         when (event) {
             is ProductsEvent.OnProductClick -> onProductClick(event.product)
-            ProductsEvent.OnAddProductClick -> onAddProductClick()
         }
     }
 
     private fun onProductClick(product: Product) {
-
-    }
-
-    private fun onAddProductClick() {
 
     }
 

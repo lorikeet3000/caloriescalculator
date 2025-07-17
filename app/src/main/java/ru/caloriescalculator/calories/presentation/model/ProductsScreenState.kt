@@ -10,6 +10,7 @@ data class Product(
     val name: String,
     val caloriesFor100: Int,
     val weight: Int,
+    val comment: String,
     val id: Long = 0
 ) {
 

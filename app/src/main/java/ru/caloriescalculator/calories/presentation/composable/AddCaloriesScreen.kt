@@ -80,29 +80,6 @@ fun AddCaloriesScreen(
 }
 
 @Composable
-private fun EnterFoodNameView(
-    foodName: String,
-    isFoodNameError: Boolean,
-    onFoodNameChanged: (String) -> Unit
-) {
-    OutlinedTextField(
-        value = foodName,
-        singleLine = true,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 32.dp),
-        onValueChange = onFoodNameChanged,
-        isError = isFoodNameError,
-        supportingText = {
-            if (isFoodNameError) {
-                Text("Название продукта не должно быть пустым")
-            }
-        },
-        label = { Text(text = "Введите название продукта") },
-    )
-}
-
-@Composable
 private fun EnterCaloriesAndWeight(
     caloriesFor100: String,
     foodWeight: String,

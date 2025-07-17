@@ -47,7 +47,6 @@ class AddCaloriesViewModel @Inject constructor(
             is AddCaloriesEvent.FoodNameChange -> onFoodNameValueChanged(event.newValue)
             is AddCaloriesEvent.FoodWeightUpdate -> onFoodWeightUpdated(event.newValue)
         }
-
     }
 
     private fun onCaloriesFor100Updated(value: String) {

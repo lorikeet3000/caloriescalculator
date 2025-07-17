@@ -11,7 +11,7 @@ import ru.caloriescalculator.calories.data.model.ProductEntity
     entities = [
         CaloriesEntity::class,
         ProductEntity::class
-    ], version = 2
+    ], version = 4
 )
 abstract class CaloriesDatabase : RoomDatabase() {
 
