@@ -14,6 +14,7 @@ class ProductsMapper
                 name = entity.name,
                 weight = entity.weight,
                 comment = entity.comment,
+                popularity = entity.popularity,
                 id = entity.id
             )
         }

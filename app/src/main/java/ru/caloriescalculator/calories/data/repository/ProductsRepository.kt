@@ -20,4 +20,8 @@ class ProductsRepository @Inject constructor(
     suspend fun deleteProduct(id: Long) {
         productsDao.deleteProduct(id)
     }
+
+    suspend fun increasePopularity(id: Long) {
+        productsDao.increasePopularity(id)
+    }
 }

@@ -3,7 +3,9 @@ package ru.caloriescalculator.calories.presentation.model
 import ru.caloriescalculator.calories.core.CaloriesCalculator
 
 data class ProductsScreenState(
-    val products: List<Product> = emptyList<Product>()
+    val products: List<Product> = emptyList<Product>(),
+    val productBottomSheet: Product? = null,
+    val confirmDeleteDialogState: ConfirmDeleteDialogState? = null,
 )
 
 data class Product(
@@ -11,6 +13,7 @@ data class Product(
     val caloriesFor100: Int,
     val weight: Int,
     val comment: String,
+    val popularity: Long = 0,
     val id: Long = 0
 ) {
 

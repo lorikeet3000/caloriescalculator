@@ -12,13 +12,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ru.caloriescalculator.calories.presentation.model.CaloriesItem
+import ru.caloriescalculator.calories.presentation.model.Product
 
 @Composable
-fun ItemBottomSheetContentView(
-    item: CaloriesItem,
-    onAddForTodayClick: (CaloriesItem) -> Unit = {},
-    onDeleteClick: (CaloriesItem) -> Unit = {},
+fun ProductBottomSheetContentView(
+    product: Product,
+    onAddForTodayClick: (Product) -> Unit = {},
+    onDeleteClick: (Product) -> Unit = {},
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -26,15 +26,20 @@ fun ItemBottomSheetContentView(
         Text(
             modifier = Modifier.fillMaxWidth()
                 .padding(8.dp),
-            text = "${item.foodName}(${item.totalCalories} ккал)",
+            text = "${product.name}(${product.totalCalories} ккал/${product.weight}г)",
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp
         )
         Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = "${product.caloriesFor100} ккал/100г",
+            textAlign = TextAlign.Center,
+        )
+        Text(
             modifier = Modifier.fillMaxWidth()
                 .clickable {
-                    onAddForTodayClick(item)
+                    onAddForTodayClick(product)
                 }
                 .padding(16.dp),
             text = "Добавить к сегодняшнему дню"
@@ -42,7 +47,7 @@ fun ItemBottomSheetContentView(
         Text(
             modifier = Modifier.fillMaxWidth()
                 .clickable {
-                    onDeleteClick(item)
+                    onDeleteClick(product)
                 }
                 .padding(16.dp),
             text = "Удалить",

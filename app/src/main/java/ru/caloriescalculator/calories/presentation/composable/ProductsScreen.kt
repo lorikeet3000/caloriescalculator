@@ -13,16 +13,23 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.caloriescalculator.calories.presentation.event.ProductsEvent
+import ru.caloriescalculator.calories.presentation.event.ProductsEvent.OnConfirmDeleteClick
+import ru.caloriescalculator.calories.presentation.event.ProductsEvent.OnDeleteDialogDismiss
 import ru.caloriescalculator.calories.presentation.model.Product
 import ru.caloriescalculator.calories.presentation.model.ProductsScreenState
 
@@ -32,6 +39,31 @@ fun ProductsScreen(
     onAddProductClick: () -> Unit = {},
     onEvent: (ProductsEvent) -> Unit = {},
 ) {
+    if (uiState.productBottomSheet != null) {
+        ProductBottomSheetView(
+            product = uiState.productBottomSheet,
+            onBottomSheetDismiss = {
+                onEvent(ProductsEvent.OnBottomSheetDismissClick)
+            },
+            onAddForTodayClick = {
+                onEvent(ProductsEvent.OnAddForTodayClick(it))
+            },
+            onDeleteClick = {
+                onEvent(ProductsEvent.OnProductDeleteClick(it))
+            }
+        )
+    }
+    if (uiState.confirmDeleteDialogState != null) {
+        ConfirmDeleteDialogView(
+            state = uiState.confirmDeleteDialogState,
+            onDismissClick = {
+                onEvent(OnDeleteDialogDismiss)
+            },
+            onConfirmDeleteClick = {
+                onEvent(OnConfirmDeleteClick(it))
+            }
+        )
+    }
     ProductsScreen(
         products = uiState.products,
         onProductClick = {
@@ -57,9 +89,12 @@ fun ProductsScreen(
                 fontSize = 22.sp,
             )
         }
-        AddButtonView(
+        Spacer(modifier = Modifier.size(32.dp))
+        AddProductButtonView(
             onAddProductClick = onAddProductClick
         )
+        Spacer(modifier = Modifier.size(32.dp))
+        HorizontalDivider()
         ProductsListView(
             products = products,
             onProductClick = onProductClick
@@ -84,7 +119,7 @@ private fun ProductsListView(
 }
 
 @Composable
-private fun AddButtonView(
+private fun AddProductButtonView(
     onAddProductClick: () -> Unit,
 ) {
     Column(
@@ -114,11 +149,16 @@ private fun ProductItemView(
             onClick(product)
         }
     ) {
+        val bottomPadding = if (product.comment.isNotEmpty()) {
+            0.dp
+        } else {
+            16.dp
+        }
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp,  bottom = bottomPadding)
         ) {
             Text(
                 text = product.name,
@@ -129,8 +169,46 @@ private fun ProductItemView(
                 text = "${product.totalCalories}",
                 fontSize = 22.sp,
             )
-            Text(text = " ккал/100г")
+            Text(text = " ккал/${product.weight}г")
         }
+        Text(
+            modifier = Modifier.fillMaxWidth()
+                .padding(end = 16.dp),
+            text = "популярность: ${product.popularity}",
+            color = MaterialTheme.colorScheme.secondary,
+            textAlign = TextAlign.End,
+        )
+        if (product.comment.isNotEmpty()) {
+            Text(
+                text = product.comment,
+                color = MaterialTheme.colorScheme.secondary,
+                textAlign = TextAlign.End,
+                modifier = Modifier.fillMaxWidth()
+                    .padding(end = 16.dp)
+
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ProductBottomSheetView(
+    product: Product,
+    onBottomSheetDismiss: () -> Unit,
+    onAddForTodayClick: (Product) -> Unit,
+    onDeleteClick: (Product) -> Unit,
+) {
+    val sheetState = rememberModalBottomSheetState()
+    ModalBottomSheet(
+        sheetState = sheetState,
+        onDismissRequest = onBottomSheetDismiss
+    ) {
+        ProductBottomSheetContentView(
+            product = product,
+            onAddForTodayClick = onAddForTodayClick,
+            onDeleteClick = onDeleteClick
+        )
     }
 }
 
@@ -155,7 +233,8 @@ private fun ProductsScreenPreview() {
                     name = "Баклажан",
                     caloriesFor100 = 65,
                     weight = 20,
-                    comment = "1 слайс"
+                    comment = "1 слайс",
+                    popularity = 5
                 )
             )
         ),

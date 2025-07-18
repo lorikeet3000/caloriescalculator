@@ -17,4 +17,7 @@ interface ProductsDao {
 
     @Query("DELETE FROM products WHERE id=:id")
     suspend fun deleteProduct(id: Long)
+
+    @Query("UPDATE products SET popularity = popularity + 1 WHERE id=:id")
+    suspend fun increasePopularity(id: Long)
 }

@@ -4,21 +4,20 @@ import androidx.compose.material.AlertDialog
 import androidx.compose.material.TextButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import ru.caloriescalculator.calories.presentation.model.CaloriesItem
 import ru.caloriescalculator.calories.presentation.model.ConfirmDeleteDialogState
 
 @Composable
 fun ConfirmDeleteDialogView(
     state: ConfirmDeleteDialogState,
     onDismissClick: () -> Unit,
-    onConfirmDeleteClick: (CaloriesItem) -> Unit,
+    onConfirmDeleteClick: (Long) -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = onDismissClick,
         confirmButton = {
             TextButton(
                 onClick = {
-                    onConfirmDeleteClick(state.item)
+                    onConfirmDeleteClick(state.id)
                 }
             ) {
                 Text("Удалить")

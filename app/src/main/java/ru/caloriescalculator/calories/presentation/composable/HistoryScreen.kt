@@ -43,9 +43,6 @@ fun HistoryScreen(
             onAddForTodayClick = {
                 onEvent(HistoryEvent.OnAddForTodayClick(it))
             },
-            onEditClick = {
-                onEvent(HistoryEvent.OnItemEditClick(it))
-            },
             onDeleteClick = {
                 onEvent(HistoryEvent.OnItemDeleteClick(it))
             }
@@ -133,7 +130,6 @@ private fun ItemBottomSheetView(
     item: CaloriesItem,
     onBottomSheetDismiss: () -> Unit,
     onAddForTodayClick: (CaloriesItem) -> Unit,
-    onEditClick: (CaloriesItem) -> Unit,
     onDeleteClick: (CaloriesItem) -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState()
@@ -144,7 +140,6 @@ private fun ItemBottomSheetView(
         ItemBottomSheetContentView(
             item = item,
             onAddForTodayClick = onAddForTodayClick,
-            onEditClick = onEditClick,
             onDeleteClick = onDeleteClick
         )
     }

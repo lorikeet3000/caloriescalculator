@@ -56,8 +56,7 @@ class HistoryViewModel @Inject constructor(
             is HistoryEvent.OnItemClick -> onItemClick(event.item)
             HistoryEvent.OnItemBottomSheetClose -> onItemBottomSheetClose()
             is HistoryEvent.OnItemDeleteClick -> onItemDelete(event.item)
-            is HistoryEvent.OnItemEditClick -> onItemEdit(event.item)
-            is HistoryEvent.OnConfirmDeleteClick -> onConfirmItemDelete(event.item)
+            is HistoryEvent.OnConfirmDeleteClick -> onConfirmItemDelete(event.id)
             HistoryEvent.OnDeleteDialogDismiss -> onDeleteDialogDismiss()
             is HistoryEvent.OnAddForTodayClick -> onAddForToday(event.item)
         }
@@ -80,9 +79,9 @@ class HistoryViewModel @Inject constructor(
         )
     }
 
-    private fun onConfirmItemDelete(item: CaloriesItem) {
+    private fun onConfirmItemDelete(id: Long) {
         viewModelScope.launch(IO) {
-            repository.deleteItem(item.id)
+            repository.deleteItem(id)
         }
         closeBottomSheet()
         _uiState.value = _uiState.value.copy(
@@ -90,14 +89,10 @@ class HistoryViewModel @Inject constructor(
         )
     }
 
-    private fun onItemEdit(item: CaloriesItem) {
-
-    }
-
     private fun onItemDelete(item: CaloriesItem) {
         _uiState.value = _uiState.value.copy(
             confirmDeleteDialogState = ConfirmDeleteDialogState(
-                item = item
+                id = item.id
             )
         )
     }
@@ -115,8 +110,6 @@ class HistoryViewModel @Inject constructor(
     }
 
     private fun onItemBottomSheetClose() {
-        _uiState.value = _uiState.value.copy(
-            itemBottomSheet = null
-        )
+        closeBottomSheet()
     }
 }

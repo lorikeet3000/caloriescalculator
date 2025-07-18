@@ -10,10 +10,6 @@ sealed interface HistoryEvent {
 
     data object OnItemBottomSheetClose : HistoryEvent
 
-    data class OnItemEditClick(
-        val item: CaloriesItem
-    ) : HistoryEvent
-
     data class OnItemDeleteClick(
         val item: CaloriesItem
     ) : HistoryEvent
@@ -21,7 +17,7 @@ sealed interface HistoryEvent {
     data object OnDeleteDialogDismiss : HistoryEvent
 
     data class OnConfirmDeleteClick(
-        val item: CaloriesItem
+        val id: Long
     ) : HistoryEvent
 
     data class OnAddForTodayClick(

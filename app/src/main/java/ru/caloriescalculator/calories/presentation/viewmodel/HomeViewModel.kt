@@ -41,12 +41,11 @@ class HomeViewModel @Inject constructor(
     fun onEvent(event: HomeEvent) {
         when (event) {
             is HomeEvent.OnAddForTodayClick -> onAddForToday(event.item)
-            is HomeEvent.OnConfirmDeleteClick -> onConfirmItemDelete(event.item)
+            is HomeEvent.OnConfirmDeleteClick -> onConfirmItemDelete(event.id)
             HomeEvent.OnDeleteDialogDismiss -> onDeleteDialogDismiss()
             HomeEvent.OnItemBottomSheetClose -> onItemBottomSheetClose()
             is HomeEvent.OnItemClick -> onItemClick(event.item)
             is HomeEvent.OnItemDeleteClick -> onItemDelete(event.item)
-            is HomeEvent.OnItemEditClick -> onItemEdit(event.item)
             HomeEvent.OnPullToRefresh -> onPullToRefresh()
         }
     }
@@ -103,9 +102,9 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    private fun onConfirmItemDelete(item: CaloriesItem) {
+    private fun onConfirmItemDelete(id: Long) {
         viewModelScope.launch(IO) {
-            repository.deleteItem(item.id)
+            repository.deleteItem(id)
         }
         closeBottomSheet()
         _uiState.value = _uiState.value.copy(
@@ -113,14 +112,10 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    private fun onItemEdit(item: CaloriesItem) {
-
-    }
-
     private fun onItemDelete(item: CaloriesItem) {
         _uiState.value = _uiState.value.copy(
             confirmDeleteDialogState = ConfirmDeleteDialogState(
-                item = item
+                id = item.id
             )
         )
     }
